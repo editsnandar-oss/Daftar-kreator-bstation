@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bstation Creator — Ambassador NandraMv</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#05070d;
+    --surface:#0d1220;
+    --surface2:#121a2e;
+    --blue:#2f6bff;
+    --blue2:#5a8bff;
+    --ice:#dbe7ff;
+    --muted:#7e8bad;
+    --line:rgba(125,150,255,0.16);
+    --radius:18px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ice);
+    font-family:'Inter',sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+    position:relative;
+    padding-bottom:96px;
+  }
+  h1,h2,h3,.disp{ font-family:'Space Grotesk',sans-serif; }
+
+  /* ---------- ambient mograph background ---------- */
+  .bg-grid{
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size:56px 56px;
+    mask-image:radial-gradient(ellipse at 50% 0%, black 0%, transparent 75%);
+    opacity:0.6;
+  }
+  .beam{
+    position:fixed; z-index:0; pointer-events:none;
+    width:140vw; height:140vw; top:-60vw; left:-20vw;
+    background:conic-gradient(from 0deg, transparent 0deg, rgba(47,107,255,0.10) 40deg, transparent 90deg, transparent 220deg, rgba(90,139,255,0.08) 260deg, transparent 320deg);
+    animation:spin 40s linear infinite;
+    border-radius:50%;
+  }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .glow-orb{
+    position:fixed; z-index:0; pointer-events:none; border-radius:50%;
+    filter:blur(60px); opacity:0.35;
+  }
+  .orb1{ width:340px; height:340px; background:var(--blue); top:-80px; right:-100px; animation:float1 12s ease-in-out infinite; }
+  .orb2{ width:260px; height:260px; background:#1a2a6c; bottom:120px; left:-80px; animation:float2 14s ease-in-out infinite; }
+  @keyframes float1{ 0%,100%{ transform:translate(0,0);} 50%{ transform:translate(-30px,40px);} }
+  @keyframes float2{ 0%,100%{ transform:translate(0,0);} 50%{ transform:translate(30px,-30px);} }
+
+  /* ---------- layout shell ---------- */
+  .wrap{ position:relative; z-index:1; max-width:720px; margin:0 auto; padding:28px 20px 20px; }
+
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; opacity:0; animation:riseIn .7s ease forwards; }
+  .brand{ display:flex; align-items:center; gap:10px; }
+  .brand-mark{ width:34px; height:34px; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .brand-mark img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .brand-name{ font-size:15px; font-weight:700; letter-spacing:0.02em; }
+  .brand-sub{ font-size:11px; color:var(--muted); }
+  .pill-tag{ font-size:11px; color:var(--blue2); border:1px solid var(--line); padding:6px 12px; border-radius:99px; background:var(--surface); }
+
+  @keyframes riseIn{ from{ opacity:0; transform:translateY(10px);} to{ opacity:1; transform:translateY(0);} }
+
+  /* ---------- page fade/slide transitions (mograph) ---------- */
+  .page{ display:none; }
+  .page.active{ display:block; animation:pageIn .55s cubic-bezier(.2,.8,.2,1) forwards; }
+  @keyframes pageIn{
+    0%{ opacity:0; transform:translateY(18px) scale(.985); }
+    100%{ opacity:1; transform:translateY(0) scale(1); }
+  }
+  .stagger > *{ opacity:0; transform:translateY(14px); animation:itemIn .6s ease forwards; }
+  .stagger > *:nth-child(1){animation-delay:.04s;}
+  .stagger > *:nth-child(2){animation-delay:.10s;}
+  .stagger > *:nth-child(3){animation-delay:.16s;}
+  .stagger > *:nth-child(4){animation-delay:.22s;}
+  .stagger > *:nth-child(5){animation-delay:.28s;}
+  .stagger > *:nth-child(6){animation-delay:.34s;}
+  .stagger > *:nth-child(7){animation-delay:.40s;}
+  .stagger > *:nth-child(8){animation-delay:.46s;}
+  @keyframes itemIn{ to{ opacity:1; transform:translateY(0);} }
+
+  /* ---------- hero ---------- */
+  .hero{ margin-bottom:22px; }
+  .eyebrow{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--blue2); text-transform:uppercase; letter-spacing:0.12em; margin-bottom:14px; }
+  .eyebrow .ico{ width:16px; height:16px; }
+  .hero h1{ font-size:32px; line-height:1.15; font-weight:700; margin-bottom:12px; }
+  .hero h1 span{ color:var(--blue2); }
+  .hero p{ color:var(--muted); font-size:14.5px; line-height:1.6; max-width:52ch; }
+
+  /* ---------- cards ---------- */
+  .card{
+    background:linear-gradient(180deg, var(--surface2), var(--surface));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:14px;
+  }
+  .card-row{ display:flex; gap:14px; align-items:flex-start; }
+  .ico-box{ flex-shrink:0; width:40px; height:40px; border-radius:12px; background:var(--surface); border:1px solid var(--line); display:flex; align-items:center; justify-content:center; }
+  .ico-box svg{ width:20px; height:20px; color:var(--blue2); }
+  .card h3{ font-size:15px; font-weight:600; margin-bottom:4px; }
+  .card p{ font-size:13.5px; color:var(--muted); line-height:1.55; }
+  .card .meta{ font-size:12px; color:var(--muted); margin-top:6px; display:flex; gap:14px; flex-wrap:wrap; }
+  .card .meta span{ display:flex; align-items:center; gap:5px; }
+  .card .meta svg{ width:13px; height:13px; }
+
+  .link-line{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--blue2); text-decoration:none; font-size:13px; font-weight:500;
+    border-bottom:1px solid rgba(90,139,255,0.35);
+    padding-bottom:1px; margin-top:10px; transition:opacity .2s;
+  }
+  .link-line:hover{ opacity:.7; }
+  .link-line svg{ width:13px; height:13px; transition:transform .2s; }
+  .link-line:hover svg{ transform:translate(2px,-2px); }
+
+  .section-label{ font-size:12px; color:var(--muted); text-transform:uppercase; letter-spacing:.1em; margin:26px 0 12px; display:flex; align-items:center; gap:8px; }
+  .section-label svg{ width:14px; height:14px; color:var(--blue2); }
+
+  .req-list{ display:flex; flex-direction:column; gap:10px; margin-top:6px; }
+  .req-item{ display:flex; gap:10px; align-items:flex-start; font-size:13.5px; color:var(--ice); }
+  .req-item svg{ width:16px; height:16px; color:var(--blue2); flex-shrink:0; margin-top:2px; }
+
+  .warn-card{ border-color:rgba(255,150,90,0.18); }
+  .warn-card .ico-box{ border-color:rgba(255,150,90,0.25); }
+  .warn-card .ico-box svg{ color:#ff9b62; }
+
+  .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  @media(max-width:480px){ .grid2{ grid-template-columns:1fr; } }
+
+  .stat{ text-align:left; }
+  .stat .num{ font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:var(--blue2); }
+  .stat .lbl{ font-size:12px; color:var(--muted); margin-top:2px; }
+
+  .cta-primary{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background:linear-gradient(135deg,var(--blue),#0a1436);
+    color:#fff; font-weight:600; font-size:14px;
+    padding:15px 20px; border-radius:14px; text-decoration:none;
+    border:1px solid rgba(125,150,255,0.35);
+    transition:transform .2s, box-shadow .2s;
+    box-shadow:0 8px 24px -8px rgba(47,107,255,0.5);
+  }
+  .cta-primary:hover{ transform:translateY(-2px); box-shadow:0 12px 30px -8px rgba(47,107,255,0.65); }
+  .cta-primary svg{ width:16px; height:16px; }
+
+  .cta-secondary{
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--surface); color:var(--ice); font-weight:500; font-size:13.5px;
+    padding:14px 18px; border-radius:14px; text-decoration:none;
+    border:1px solid var(--line); margin-top:10px;
+    transition:border-color .2s, transform .2s;
+  }
+  .cta-secondary:hover{ border-color:var(--blue2); transform:translateY(-1px); }
+  .cta-secondary svg{ width:15px; height:15px; color:var(--blue2); }
+
+  .divider{ height:1px; background:var(--line); margin:20px 0; }
+
+  .phone-note{ font-size:12px; color:var(--muted); text-align:center; margin-top:14px; }
+  .phone-note b{ color:var(--ice); font-weight:600; }
+
+  /* ---------- bottom dock nav (signature element) ---------- */
+  .dock-wrap{
+    position:fixed; left:0; right:0; bottom:0; z-index:10;
+    display:flex; justify-content:center;
+    padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+    pointer-events:none;
+  }
+  .dock{
+    pointer-events:auto;
+    position:relative;
+    display:flex; gap:4px;
+    background:linear-gradient(180deg, rgba(18,26,46,0.92), rgba(6,9,17,0.96));
+    border:1px solid rgba(125,150,255,0.22);
+    border-radius:22px;
+    padding:6px;
+    backdrop-filter:blur(14px);
+    box-shadow:0 20px 50px -12px rgba(0,0,0,0.6);
+    max-width:520px; width:100%;
+  }
+  .dock-indicator{
+    position:absolute; top:6px; bottom:6px; left:6px;
+    width:calc(25% - 6px);
+    background:linear-gradient(135deg,var(--blue),#0a1030);
+    border-radius:16px;
+    transition:transform .45s cubic-bezier(.2,.9,.25,1), border-radius .45s ease;
+    z-index:0;
+    box-shadow:0 6px 20px -6px rgba(47,107,255,0.7);
+  }
+  .dock-btn{
+    position:relative; z-index:1; flex:1;
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:none; border:none; cursor:pointer;
+    padding:10px 4px 9px; border-radius:16px;
+    color:var(--muted); font-family:'Inter',sans-serif; font-size:10.5px; font-weight:600;
+    transition:color .3s;
+  }
+  .dock-btn svg{ width:19px; height:19px; stroke:currentColor; transition:transform .35s ease; }
+  .dock-btn.active{ color:#fff; }
+  .dock-btn.active svg{ transform:scale(1.08); }
+  .dock-btn .draw{ stroke-dasharray:60; stroke-dashoffset:60; }
+  .dock-btn.active .draw{ animation:draw .6s ease forwards; }
+  @keyframes draw{ to{ stroke-dashoffset:0; } }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important; }
+  }
+
+  /* ================= EXTRA POLISH (added, non-destructive) ================= */
+
+  /* scroll progress bar */
+  .scroll-progress{
+    position:fixed; top:0; left:0; height:2.5px; width:0%;
+    background:linear-gradient(90deg, var(--blue), var(--blue2), #9fc4ff);
+    z-index:50; transition:width .12s linear;
+    box-shadow:0 0 12px rgba(90,139,255,0.7);
+  }
+
+  /* cursor spotlight */
+  .cursor-spot{
+    position:fixed; top:0; left:0; width:420px; height:420px;
+    background:radial-gradient(circle, rgba(90,139,255,0.14), transparent 70%);
+    border-radius:50%; pointer-events:none; z-index:0;
+    transform:translate(-50%,-50%); opacity:0;
+    transition:opacity .4s ease;
+    will-change:transform;
+  }
+  .cursor-spot.on{ opacity:1; }
+
+  /* logo pulse ring */
+  .brand-mark{ position:relative; }
+  .brand-mark::after{
+    content:''; position:absolute; inset:-4px; border-radius:13px;
+    border:1.5px solid rgba(90,139,255,0.55);
+    animation:ringPulse 2.6s ease-out infinite;
+  }
+  @keyframes ringPulse{
+    0%{ transform:scale(0.92); opacity:.9; }
+    70%{ transform:scale(1.28); opacity:0; }
+    100%{ opacity:0; }
+  }
+
+  /* hero heading text (static, no animation) */
+  .hero h1{ overflow:visible; }
+  .hero h1 span{ color:var(--blue2); }
+
+
+  /* card tilt + glare (JS driven via --mx/--my/--rx/--ry) */
+  .card{
+    position:relative; overflow:hidden;
+    transform:perspective(800px) rotateX(var(--ry,0deg)) rotateY(var(--rx,0deg)) translateZ(0);
+    transition:transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s ease, box-shadow .35s ease;
+    will-change:transform;
+  }
+  .card::before{
+    content:''; position:absolute; inset:0; pointer-events:none; opacity:0;
+    background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%), rgba(120,160,255,0.16), transparent 60%);
+    transition:opacity .35s ease;
+  }
+  .card:hover{ border-color:rgba(120,160,255,0.4); box-shadow:0 18px 40px -18px rgba(20,40,100,0.55); }
+  .card:hover::before{ opacity:1; }
+
+  /* reveal-on-scroll for content further down the page */
+  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .reveal.in-view{ opacity:1; transform:translateY(0); }
+
+  /* dock button ripple */
+  .dock-btn{ overflow:hidden; }
+  .ripple{
+    position:absolute; border-radius:50%; background:rgba(255,255,255,0.35);
+    transform:scale(0); animation:rippleAnim .55s ease-out forwards; pointer-events:none;
+  }
+  @keyframes rippleAnim{ to{ transform:scale(1); opacity:0; } }
+
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="beam"></div>
+<div class="glow-orb orb1"></div>
+<div class="glow-orb orb2"></div>
+<div class="cursor-spot" id="cursorSpot"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <img src="data:image/jpeg;base64,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" alt="Bstation Creator">
+      </div>
+      <div>
+        <div class="brand-name">Bstation Creator</div>
+        <div class="brand-sub">Ambassador · NandraMv</div>
+      </div>
+    </div>
+    <div class="pill-tag">bilibili.tv/id</div>
+  </div>
+
+  <!-- ================= PAGE 1 : BERANDA ================= -->
+  <section class="page active" id="page-home">
+    <div class="hero stagger">
+      <div class="eyebrow">
+        <a href="https://bili.im/H2I8jxF" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:8px; color:inherit; text-decoration:none;">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 12c2 3 4 4 5 4 2 0 3-2 3-4M7 12l-2-2M7 12l-1 3"/><path d="M13 8l2-3M17 9l3-1"/></svg>
+        Join us
+        </a>
+      </div>
+      <h1>Kreator Resmi <span>Bstation</span></h1>
+      <p>Platform streaming anime legal, sekaligus wadah resmi kreator Anime, Game, dan J-POP di Indonesia. Upload konten sesuai skill kamu dan dapatkan komisi bulanan.</p>
+    </div>
+
+    <div class="grid2 stagger">
+      <div class="card stat">
+        <div class="num">Rp20rb–300rb</div>
+        <div class="lbl">Komisi per bulan</div>
+      </div>
+      <div class="card stat">
+        <div class="num">Hak milik</div>
+        <div class="lbl">Konten tetap milik kreator</div>
+      </div>
+    </div>
+
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M5 8l7-5 7 5"/></svg>
+      Syarat pendaftaran
+    </div>
+    <div class="card stagger">
+      <div class="req-list">
+        <div class="req-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>
+          Punya akun sosial media dengan minimal 100 followers
+        </div>
+        <div class="req-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>
+          Membuat 4 video terlebih dahulu sesuai kategori pilihan
+        </div>
+        <div class="req-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>
+          Resolusi minimal 720p, rekomendasi 1080p
+        </div>
+        <div class="req-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>
+          Rasio 16:9 atau 9:16 (rekomendasi 16:9)
+        </div>
+      </div>
+    </div>
+
+    <div class="card warn-card stagger">
+      <div class="card-row">
+        <div class="ico-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L2.9 17a2 2 0 0 0 1.7 3h14.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+        </div>
+        <div>
+          <h3>Wajib original</h3>
+          <p>Semua konten wajib original, tidak boleh reupload dari platform lain. Bstation punya tim peninjauan khusus untuk memastikan kualitas dan orisinalitas.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.8-3.6 4.6-5.4 8-5.4s6.2 1.8 8 5.4"/></svg>
+        </div>
+        <div>
+          <h3>Bimbingan admin — 100% gratis</h3>
+          <p>Setelah 4 video siap, admin akan mengecek dan mengajari cara daftar. Diusahakan 1–2 hari untuk 1 video agar peluang lolos lebih besar.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2 2-2 3.5M12 17h.01"/></svg>
+      Tanya jawab
+    </div>
+    <div class="card stagger">
+      <h3>Kenapa pendaftaran Bstation dilakukan melalui ambassador?</h3>
+      <p>Bstation memiliki program kreator eksklusif, sehingga diperlukan proses pendaftaran yang lebih detail agar tim dapat memfilter dan menyeleksi kreator yang sesuai untuk bergabung ke dalam program tersebut.</p>
+      <p style="margin-top:10px;">Masih perlu konfirmasi atau info tambahan?</p>
+      <a class="link-line" href="https://www.instagram.com/bstation_creator_id" target="_blank" rel="noopener">DM Instagram @bstation_creator_id <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 2 : KATEGORI ================= -->
+  <section class="page" id="page-category">
+    <div class="hero stagger">
+      <div class="eyebrow">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M4 10h16"/></svg>
+        Pilih salah satu
+      </div>
+      <h1>Kategori <span>konten</span></h1>
+      <p>Durasi minimal 1–20 menit untuk sebagian besar kategori. Boleh portrait atau landscape, wajah tidak wajib tampil.</p>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l4.5-1.2L19 8.3a2 2 0 0 0 0-2.8l-.5-.5a2 2 0 0 0-2.8 0L5.2 15.5 4 20z"/><path d="M14 6l4 4"/></svg></div>
+        <div>
+          <h3>Drawing <span style="color:var(--muted); font-weight:400;">— rekomen pemula</span></h3>
+          <p>Minimal 1–20 menit. Wajib ada interaksi (teks/voice). Layar portrait atau landscape, wajah tidak wajib tampil.</p>
+          <a class="link-line" href="https://bili.im/qzlsjg5" target="_blank" rel="noopener">Lihat contoh drawing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M9 9l6 3-6 3V9z"/></svg></div>
+        <div>
+          <h3>Review Anime / Film</h3>
+          <p>Durasi minimal 1–20 menit. Bahas isi cerita dan sudut pandangmu sebagai reviewer.</p>
+          <a class="link-line" href="https://bili.im/yORwhjs" target="_blank" rel="noopener">Contoh review anime <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></div>
+        <div>
+          <h3>AMV (Anime Music Video)</h3>
+          <p>Minimal durasi 30 detik, maksimal 20 menit. Padukan potongan anime dengan musik yang pas.</p>
+          <a class="link-line" href="https://bili.im/XarAa0Q" target="_blank" rel="noopener">Contoh AMV <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3z"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></div>
+        <div>
+          <h3>Dubbing Anime</h3>
+          <p>Durasi minimal 1–20 menit. Bisa berupa parodi dubbing atau fandubbing.</p>
+          <a class="link-line" href="https://www.bilibili.tv/id/space/1533851963" target="_blank" rel="noopener">Contoh parodi dubbing <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a><br>
+          <a class="link-line" href="https://www.bilibili.tv/id/video/4795973094348288" target="_blank" rel="noopener">Contoh fandubbing (video) <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a><br>
+          <a class="link-line" href="https://www.bilibili.tv/id/space/1307095768" target="_blank" rel="noopener">Contoh fandubbing (channel) <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="14" height="11" rx="2"/><path d="M17 10l4-2v9l-4-2"/></svg></div>
+        <div>
+          <h3>Cosplay</h3>
+          <p>Durasi minimal 1–20 menit. Tunjukkan karakter favoritmu lewat kostum dan ekspresi.</p>
+          <a class="link-line" href="https://www.bilibili.tv/id/space/1228460669" target="_blank" rel="noopener">Contoh cosplay <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a4 4 0 0 0-4 4v5a4 4 0 0 0 8 0V7a4 4 0 0 0-4-4z"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4"/></svg></div>
+        <div>
+          <h3>Sing Cover</h3>
+          <p>Bawakan ulang lagu favoritmu dengan gayamu sendiri.</p>
+          <a class="link-line" href="https://bili.im/meLUJv8" target="_blank" rel="noopener">Contoh sing cover <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2"/><path d="M12 7v5l-4 7M12 12l4 7M8 12h8"/></svg></div>
+        <div>
+          <h3>Dance</h3>
+          <p>Tunjukkan koreografi terbaikmu, solo atau bersama tim.</p>
+          <a class="link-line" href="https://bili.im/sDptgZS" target="_blank" rel="noopener">Contoh dance <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 3 : REWARD & EVENT ================= -->
+  <section class="page" id="page-reward">
+    <div class="hero stagger">
+      <div class="eyebrow">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15a5 5 0 0 0 5-5V4H7v6a5 5 0 0 0 5 5z"/><path d="M9 21h6M12 15v6M5 6H3v2a4 4 0 0 0 4 4M19 6h2v2a4 4 0 0 0-4 4"/></svg>
+        Sistem kompetisi, bukan gajian
+      </div>
+      <h1>Reward <span>& event</span></h1>
+      <p>Reward dihitung per periode, bukan per konten. Kita berkompetisi dengan kreator lain — jadi kuncinya konsisten.</p>
+    </div>
+
+    <div class="grid2 stagger">
+      <div class="card">
+        <h3>Weekly</h3>
+        <p>Menang jika aktif dan viewers tinggi, hanya bisa didapat sekali seminggu.</p>
+        <div class="meta">
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>Video: 50rb</span>
+          <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>Tulisan: 20rb</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>MAC (bulanan)</h3>
+        <p>Hasil konsistensi selama sebulan penuh.</p>
+        <div class="meta">
+          <span>Post/blog: 15–150rb</span>
+          <span>Video: 20–300rb</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>
+      Dinilai dari
+    </div>
+    <div class="card stagger">
+      <div class="req-list">
+        <div class="req-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>Kualitas video</div>
+        <div class="req-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>Like, komen, share, dan lainnya</div>
+        <div class="req-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>Jumlah video yang diunggah</div>
+      </div>
+    </div>
+
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
+      Event yang pernah diikuti Mimin NandraMv
+    </div>
+    <div class="card stagger">
+      <a class="link-line" href="https://bili.im/Rn1qxvN" target="_blank" rel="noopener">Kompetisi Kreasi Unggahan 2 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a><br>
+      <a class="link-line" href="https://bili.im/Rn1qxvN" target="_blank" rel="noopener">Kompetisi Kreasi Unggahan 3 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a><br>
+      <a class="link-line" href="https://www.instagram.com/p/DanNrWJTwJ1/?igsh=cmRucmxpMGR6MHVr" target="_blank" rel="noopener">Trending Hunt <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a><br>
+      <a class="link-line" href="https://www.instagram.com/p/DYUfS2nk4bC/?igsh=ajlhMWZjeng1djhi" target="_blank" rel="noopener">Nakama Festival <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+    </div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+        <div>
+          <h3>Testimoni kreator</h3>
+          <p>Cerita langsung dari kreator yang sudah bergabung dan mendapatkan reward.</p>
+          <a class="link-line" href="https://drive.google.com/file/d/149CusnDhuqfCZajavPrgb9Be0m7FQYt-/view?usp=drivesdk" target="_blank" rel="noopener">Lihat testimoni <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PAGE 4 : DAFTAR ================= -->
+  <section class="page" id="page-join">
+    <div class="hero stagger">
+      <div class="eyebrow">
+        <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Langkah terakhir
+      </div>
+      <h1>Daftar jadi <span>kreator</span></h1>
+      <p>Pendaftaran dilakukan lewat ambassador karena Bstation punya program kreator eksklusif — supaya tim bisa menyeleksi kreator yang paling sesuai.</p>
+    </div>
+
+    <a class="cta-primary stagger" href="https://rsbcreatormanager.com/form?ref=BAA11DF3" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg>
+      Daftar jadi kreator sekarang
+    </a>
+
+    <a class="cta-secondary stagger" href="https://chat.whatsapp.com/Dxqa2p81BrOGp5aEvQB4cX" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Gabung grup WhatsApp kreator
+    </a>
+
+    <a class="cta-secondary stagger" href="https://wa.me/6285823443082?text=Halo_admin_nandra_saya_ingin_daftar_kreator_bstation_mohon_bimbingannya%F0%9F%A4%97" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      Chat langsung ke NandraMv
+    </a>
+
+    <a class="cta-secondary stagger" href="https://youtu.be/tG_OJqQkyhw?si=9ryaS-TS10DYdGO0" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="12" rx="3"/><path d="M10 9.5l5 2.5-5 2.5v-5z"/></svg>
+      Tonton tutorial daftar
+    </a>
+
+    <div class="divider"></div>
+
+    <div class="card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01M10.3 3.9L2.9 17a2 2 0 0 0 1.7 3h14.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg></div>
+        <div>
+          <h3>Bimbingan 100% gratis</h3>
+          <p>Jangan keluar dari grup yang mengundang kamu jadi calon kreator. Jika ada pihak yang meminta bayaran untuk pendaftaran atau bimbingan, segera hubungi WhatsApp di bawah.</p>
+        </div>
+      </div>
+    </div>
+
+    <p class="phone-note">WhatsApp resmi ambassador: <b>085823443082</b> · Peraturan bisa berubah sewaktu-waktu.</p>
+  </section>
+
+</div>
+
+<!-- ================= BOTTOM DOCK NAV ================= -->
+<div class="dock-wrap">
+  <nav class="dock" id="dock">
+    <div class="dock-indicator" id="dockIndicator"></div>
+    <button class="dock-btn active" data-page="page-home" data-index="0">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M4 11.5L12 4l8 7.5"/><path d="M6 10v9h12v-9" stroke-width="1.8"/></svg>
+      Beranda
+    </button>
+    <button class="dock-btn" data-page="page-category" data-index="1">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="7" height="7" rx="1.5" stroke-width="1.8"/><rect x="13" y="4" width="7" height="7" rx="1.5" class="draw"/><rect x="4" y="13" width="7" height="7" rx="1.5" stroke-width="1.8"/><rect x="13" y="13" width="7" height="7" rx="1.5" stroke-width="1.8"/></svg>
+      Kategori
+    </button>
+    <button class="dock-btn" data-page="page-reward" data-index="2">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
+      Reward
+    </button>
+    <button class="dock-btn" data-page="page-join" data-index="3">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path class="draw" d="M5 12l4 4 10-10"/></svg>
+      Daftar
+    </button>
+  </nav>
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('.dock-btn');
+  const indicator = document.getElementById('dockIndicator');
+  const pages = document.querySelectorAll('.page');
+
+  function moveIndicator(btn){
+    indicator.style.transform = `translateX(${btn.offsetLeft - 6}px)`;
+  }
+
+  function setActive(btn){
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // restart draw animation
+    btn.querySelectorAll('.draw').forEach(p=>{
+      p.style.animation = 'none';
+      void p.getBoundingClientRect().width;
+      p.style.animation = '';
+    });
+    moveIndicator(btn);
+
+    const target = btn.dataset.page;
+    pages.forEach(p => {
+      if(p.id === target){
+        p.classList.add('active');
+        p.querySelectorAll('.stagger').forEach(s=>{
+          s.style.animation='none';
+          void s.getBoundingClientRect().width;
+          s.style.animation='';
+        });
+      } else {
+        p.classList.remove('active');
+      }
+    });
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+
+  buttons.forEach(btn => btn.addEventListener('click', () => setActive(btn)));
+
+  window.addEventListener('load', () => moveIndicator(document.querySelector('.dock-btn.active')));
+  window.addEventListener('resize', () => moveIndicator(document.querySelector('.dock-btn.active')));
+
+  /* ================= EXTRA POLISH (added, non-destructive) ================= */
+
+  // cursor spotlight
+  const spot = document.getElementById('cursorSpot');
+  if(window.matchMedia('(pointer:fine)').matches){
+    window.addEventListener('pointermove', (e) => {
+      spot.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%,-50%)`;
+      spot.classList.add('on');
+    });
+    window.addEventListener('pointerleave', () => spot.classList.remove('on'));
+  }
+
+  // scroll progress bar
+  const progress = document.getElementById('scrollProgress');
+  function updateProgress(){
+    const h = document.documentElement;
+    const scrolled = h.scrollTop;
+    const max = h.scrollHeight - h.clientHeight;
+    progress.style.width = max > 0 ? `${(scrolled / max) * 100}%` : '0%';
+  }
+  window.addEventListener('scroll', updateProgress, { passive:true });
+
+  // card tilt + glare
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const r = card.getBoundingClientRect();
+      const px = ((e.clientX - r.left) / r.width) * 100;
+      const py = ((e.clientY - r.top) / r.height) * 100;
+      card.style.setProperty('--mx', `${px}%`);
+      card.style.setProperty('--my', `${py}%`);
+      const rx = ((px - 50) / 50) * 3.5;
+      const ry = -((py - 50) / 50) * 3.5;
+      card.style.setProperty('--rx', `${rx}deg`);
+      card.style.setProperty('--ry', `${ry}deg`);
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
+    });
+  });
+
+  // reveal-on-scroll (applies to items beyond the first screen, doesn't touch existing stagger timing)
+  const revealTargets = document.querySelectorAll('.card, .cta-primary, .cta-secondary');
+  revealTargets.forEach(el => el.classList.add('reveal'));
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold:0.15 });
+  function observeReveals(){
+    document.querySelectorAll('.page.active .reveal').forEach(el => {
+      if(!el.classList.contains('in-view')) revealObserver.observe(el);
+    });
+  }
+  observeReveals();
+
+  // re-observe and reset progress whenever a tab is switched
+  buttons.forEach(btn => btn.addEventListener('click', () => {
+    setTimeout(() => { observeReveals(); updateProgress(); }, 60);
+  }));
+
+  // dock button ripple
+  buttons.forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const r = btn.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ripple';
+      const size = Math.max(r.width, r.height) * 1.4;
+      ripple.style.width = ripple.style.height = `${size}px`;
+      ripple.style.left = `${e.clientX - r.left - size/2}px`;
+      ripple.style.top = `${e.clientY - r.top - size/2}px`;
+      btn.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 550);
+    });
+  });
+</script>
+
+</body>
+</html>
