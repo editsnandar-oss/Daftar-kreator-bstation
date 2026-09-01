@@ -188,6 +188,27 @@
 
   .divider{ height:1px; background:var(--line); margin:20px 0; }
 
+  /* ---------- faq accordion ---------- */
+  .faq-item{
+    background:linear-gradient(180deg, var(--surface2), var(--surface));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+  .faq-q{
+    width:100%; display:flex; align-items:center; justify-content:space-between; gap:12px;
+    background:none; border:none; cursor:pointer; padding:20px;
+    font-family:'Space Grotesk',sans-serif; font-size:15px; font-weight:600;
+    color:var(--ice); text-align:left;
+  }
+  .faq-chevron{ flex-shrink:0; display:flex; color:var(--blue2); transition:transform .3s ease; }
+  .faq-chevron svg{ width:18px; height:18px; }
+  .faq-item.open .faq-chevron{ transform:rotate(180deg); }
+  .faq-a{ max-height:0; overflow:hidden; transition:max-height .35s ease; }
+  .faq-item.open .faq-a{ max-height:400px; }
+  .faq-a-inner{ padding:0 20px 20px; font-size:13.5px; color:var(--muted); line-height:1.6; }
+
   .phone-note{ font-size:12px; color:var(--muted); text-align:center; margin-top:14px; }
   .phone-note b{ color:var(--ice); font-weight:600; }
 
@@ -501,10 +522,47 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 0 1 5 0c0 1.7-2 2-2 3.5M12 17h.01"/></svg>
       Tanya jawab
     </div>
-    <div class="card stagger">
-      <h3>Kenapa pendaftaran Bstation dilakukan melalui ambassador?</h3>
-      <p>Bstation memiliki program kreator eksklusif, sehingga diperlukan proses pendaftaran yang lebih detail agar tim dapat memfilter dan menyeleksi kreator yang sesuai untuk bergabung ke dalam program tersebut.</p>
-      <p style="margin-top:10px;">Perlu konfirmasi atau info tambahan? Join grup</p>
+    <div class="faq-item stagger">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>Kenapa pendaftaran Bstation dilakukan melalui ambassador?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">Bstation memiliki program kreator eksklusif, sehingga diperlukan proses pendaftaran yang lebih detail agar tim dapat memfilter dan menyeleksi kreator yang sesuai untuk bergabung ke dalam program tersebut. Perlu konfirmasi atau info tambahan? Gabung grup WhatsApp kreator.</div></div>
+    </div>
+    <div class="faq-item stagger">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>Apakah pendaftaran berbayar?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner"><b>100% gratis.</b> Tidak ada biaya apa pun untuk daftar jadi kreator Bstation. Seluruh proses pendaftaran dan bimbingan dari admin tidak dipungut biaya. Jika ada pihak yang meminta bayaran atas nama program ini, segera laporkan.</div></div>
+    </div>
+    <div class="faq-item stagger">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>Berapa lama proses review setelah 4 video selesai?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">Maksimal 5 hari kerja (tidak termasuk tanggal merah/hari libur nasional). Pastikan 4 video sudah diunggah sebelum mendaftar, lalu langsung hubungi admin — admin akan memandu proses daftar resminya.</div></div>
+    </div>
+    <div class="faq-item stagger">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>Apakah konten saya tetap jadi milik saya?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">Ya. Hak kepemilikan konten 100% tetap milik kreator. Bstation hanya menjadi platform distribusi konten dan tempat kamu mendapatkan reward, bukan mengklaim kontenmu.</div></div>
+    </div>
+    <div class="faq-item stagger">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>Boleh upload konten dari YouTube atau platform lain?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">Tidak boleh. Semua konten wajib original, bukan reupload dari platform lain. Tim review Bstation secara aktif memeriksa orisinalitas konten; konten yang terdeteksi reupload akan ditolak atau dimoderasi.</div></div>
+    </div>
+    <div class="faq-item stagger">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        <span>Kapan reward cair dan bagaimana cara menerimanya?</span>
+        <span class="faq-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></span>
+      </button>
+      <div class="faq-a"><div class="faq-a-inner">Reward mingguan (Weekly) diumumkan lewat Instagram dan grup kreator. Reward bulanan (MAC) dihitung dari konsistensi konten selama satu periode penuh. Mekanisme pencairan diinformasikan admin setelah kamu resmi jadi kreator.</div></div>
     </div>
   </section>
 
@@ -640,6 +698,16 @@
       </div>
     </div>
 
+    <div class="card warn-card stagger">
+      <div class="card-row">
+        <div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
+        <div>
+          <h3>Cara reward dihitung</h3>
+          <p>Reward dihitung per satu periode (mingguan atau bulanan), bukan per konten. Pemenang Weekly diumumkan lewat Instagram dan dibagikan ke grup kreator.</p>
+        </div>
+      </div>
+    </div>
+
     <div class="section-label">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>
       Event yang pernah diikuti Mimin NandraMv
@@ -672,6 +740,20 @@
       </div>
       <h1>Daftar jadi <span>kreator</span></h1>
       <p>Pendaftaran dilakukan lewat ambassador karena Bstation punya program kreator eksklusif — supaya tim bisa menyeleksi kreator yang paling sesuai.</p>
+    </div>
+
+    <div class="section-label">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      Langkah daftar kreator
+    </div>
+    <div class="card stagger">
+      <div class="req-list">
+        <div class="req-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span><b>1. Gabung grup WhatsApp kreator</b> — dapat bimbingan langsung dari admin, jangan keluar dari grup.</span></div>
+        <div class="req-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span><b>2. Tonton tutorial pendaftaran</b> — pahami alur dan syarat lengkap sebelum mulai membuat konten.</span></div>
+        <div class="req-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span><b>3. Buat 4 video konten original</b> — pilih 1 kategori, minimal resolusi 720p, wajib original.</span></div>
+        <div class="req-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span><b>4. Upload ke Bstation & lapor admin</b> — setelah 4 video selesai, chat admin di grup WA untuk pengecekan.</span></div>
+        <div class="req-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l4 4 10-10"/></svg><span><b>5. Daftar resmi & mulai dapat reward</b> — admin memandu proses pendaftaran resmi hingga kamu jadi kreator.</span></div>
+      </div>
     </div>
 
     <a class="cta-primary stagger" href="https://rsbcreatormanager.com/form?ref=BAA11DF3" target="_blank" rel="noopener">
@@ -759,6 +841,14 @@
     hideLoader();
   } else {
     window.addEventListener('load', hideLoader);
+  }
+
+  /* ================= FAQ ACCORDION ================= */
+  function toggleFaq(btn){
+    const item = btn.closest('.faq-item');
+    const wasOpen = item.classList.contains('open');
+    item.parentElement.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
   }
 
   const buttons = document.querySelectorAll('.dock-btn');
