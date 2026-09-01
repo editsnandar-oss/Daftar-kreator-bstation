@@ -68,7 +68,7 @@
   /* ---------- layout shell ---------- */
   .wrap{ position:relative; z-index:1; max-width:720px; margin:0 auto; padding:28px 20px 20px; }
 
-  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; opacity:0; animation:riseIn .7s ease forwards; }
+  .topbar{ display:flex; align-items:center; justify-content:space-between; margin-bottom:28px; }
   .brand{ display:flex; align-items:center; gap:10px; }
   .brand-mark{ width:34px; height:34px; border-radius:10px; overflow:hidden; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .brand-mark img{ width:100%; height:100%; object-fit:cover; display:block; }
@@ -80,20 +80,12 @@
 
   /* ---------- page fade/slide transitions (mograph) ---------- */
   .page{ display:none; }
-  .page.active{ display:block; animation:pageIn .55s cubic-bezier(.2,.8,.2,1) forwards; }
+  .page.active{ display:block; }
   @keyframes pageIn{
     0%{ opacity:0; transform:translateY(18px) scale(.985); }
     100%{ opacity:1; transform:translateY(0) scale(1); }
   }
-  .stagger > *{ opacity:0; transform:translateY(14px); animation:itemIn .6s ease forwards; }
-  .stagger > *:nth-child(1){animation-delay:.04s;}
-  .stagger > *:nth-child(2){animation-delay:.10s;}
-  .stagger > *:nth-child(3){animation-delay:.16s;}
-  .stagger > *:nth-child(4){animation-delay:.22s;}
-  .stagger > *:nth-child(5){animation-delay:.28s;}
-  .stagger > *:nth-child(6){animation-delay:.34s;}
-  .stagger > *:nth-child(7){animation-delay:.40s;}
-  .stagger > *:nth-child(8){animation-delay:.46s;}
+  .stagger > *{ opacity:1; transform:none; }
   @keyframes itemIn{ to{ opacity:1; transform:translateY(0);} }
 
   /* ---------- hero ---------- */
@@ -295,14 +287,6 @@
 
   /* ================= EXTRA POLISH (added, non-destructive) ================= */
 
-  /* scroll progress bar */
-  .scroll-progress{
-    position:fixed; top:0; left:0; height:2.5px; width:0%;
-    background:linear-gradient(90deg, var(--blue), var(--blue2), #9fc4ff);
-    z-index:50; transition:width .12s linear;
-    box-shadow:0 0 12px rgba(90,139,255,0.7);
-  }
-
   /* cursor spotlight */
   .cursor-spot{
     position:fixed; top:0; left:0; width:420px; height:420px;
@@ -348,8 +332,8 @@
   .card:hover::before{ opacity:1; }
 
   /* reveal-on-scroll for content further down the page */
-  .reveal{ opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
-  .reveal.in-view{ opacity:1; transform:translateY(0); }
+  .reveal{ opacity:1; transform:none; }
+  .reveal.in-view{ opacity:1; transform:none; }
 
   /* dock button ripple (mask terpisah agar bubble icon bisa keluar dari bar) */
   .dock-btn-mask{
@@ -428,7 +412,6 @@
 <div class="glow-orb orb1"></div>
 <div class="glow-orb orb2"></div>
 <div class="cursor-spot" id="cursorSpot"></div>
-<div class="scroll-progress" id="scrollProgress"></div>
 
 <div class="wrap">
 
@@ -911,19 +894,11 @@
     window.addEventListener('pointerleave', () => spot.classList.remove('on'));
   }
 
-  // scroll progress bar (RAF-throttled biar nggak jalan lebih sering dari refresh layar)
-  const progress = document.getElementById('scrollProgress');
-  function updateProgress(){
-    const h = document.documentElement;
-    const scrolled = h.scrollTop;
-    const max = h.scrollHeight - h.clientHeight;
-    progress.style.width = max > 0 ? `${(scrolled / max) * 100}%` : '0%';
-  }
+  // dock border on scroll (RAF-throttled)
   let scrollTicking = false;
   function onScroll(){
     if(!scrollTicking){
       requestAnimationFrame(() => {
-        updateProgress();
         handleDockBorder();
         scrollTicking = false;
       });
@@ -981,7 +956,7 @@
 
   // re-observe and reset progress whenever a tab is switched
   buttons.forEach(btn => btn.addEventListener('click', () => {
-    setTimeout(() => { observeReveals(); updateProgress(); }, 60);
+    setTimeout(() => { observeReveals(); }, 60);
   }));
 
   // hapus garis atas dock saat scroll ke bawah, muncul lagi saat scroll ke atas / dekat top
