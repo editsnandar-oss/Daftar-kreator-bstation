@@ -2,12 +2,17 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
 <title>Bstation Creator — Ambassador NandraMv</title>
 <meta name="google-site-verification" content="778ZO8GKmF9ak-lmp6OEtQzo91vQp50n79rGLSvHyro" />
 <meta name="description" content="Panduan daftar kreator resmi Bstation lewat Ambassador NandraMv: syarat, kategori konten, reward, dan bimbingan admin 100% gratis.">
 <meta name="theme-color" content="#05070d">
-<script>try{ if(localStorage.getItem('theme')==='light'){ document.documentElement.setAttribute('data-theme','light'); document.querySelector('meta[name=theme-color]').content='#f2f5fd'; } }catch(e){}</script>
+<meta name="color-scheme" content="dark light">
+<script>(function(){ /* tema awal: terang; hanya pengunjung yang pernah memilih gelap yang mendapat gelap */
+  var h=document.documentElement, m=document.querySelector('meta[name=theme-color]');
+  h.setAttribute('data-theme','light'); m.content='#f2f5fd';
+  try{ if(localStorage.getItem('theme')==='dark'){ h.removeAttribute('data-theme'); m.content='#05070d'; } }catch(e){}
+})();</script>
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" href="/favicon-192.png" sizes="192x192">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Bstation Creator","alternateName":"Bstation Creator — Ambassador NandraMv","url":"https://join-bstation-creator.vercel.app/"}</script>
@@ -271,9 +276,9 @@
   .dock-btn svg{ width:19px; height:19px; stroke:currentColor; transition:transform .35s ease; }
   .dock-btn.active{ color:#fff; }
   .dock-btn.active svg{ transform:scale(1.08); }
-  .dock-btn .draw{ stroke-dasharray:60; stroke-dashoffset:60; }
-  .dock-btn.active .draw{ animation:draw .6s ease forwards; }
-  @keyframes draw{ to{ stroke-dashoffset:0; } }
+  .dock-btn .draw{ stroke-dasharray:60; stroke-dashoffset:0; }
+  .dock-btn.active .draw{ animation:draw .6s ease; }
+  @keyframes draw{ from{ stroke-dashoffset:60; } to{ stroke-dashoffset:0; } }
 
   /* ===== bubble pop press animation (upgrade, non-destructive) ===== */
   .dock-ico{
@@ -508,6 +513,45 @@
   .icon-btn .i-moon{ display:none; }
   [data-theme="light"] .icon-btn .i-moon{ display:block; }
   [data-theme="light"] .icon-btn .i-sun{ display:none; }
+
+  /* ================= ASISTEN AI ================= */
+  .ai-fab{
+    position:fixed; z-index:45; right:16px; bottom:calc(148px + env(safe-area-inset-bottom));
+    display:flex; align-items:center; gap:7px; cursor:pointer; border:none; color:#fff;
+    background:linear-gradient(135deg,var(--blue),#1d4ed8); border-radius:99px; padding:11px 16px 11px 13px;
+    font:600 13px 'Inter',sans-serif; box-shadow:0 12px 26px -8px rgba(47,107,255,.7);
+    transition:transform .25s cubic-bezier(.34,1.56,.64,1);
+  }
+  .ai-fab:active{ transform:scale(.93); }
+  .ai-fab svg{ width:17px; height:17px; }
+  .ai-fab:focus-visible, .ai-tab:focus-visible, .ai-go:focus-visible{ outline:2px solid var(--blue2); outline-offset:2px; }
+  .ai-sheet{ display:flex; flex-direction:column; height:min(88vh,680px); max-height:88dvh; }
+  .ai-head{ display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+  .ai-head h3{ flex:1; font-size:17px; margin:0; }
+  .ai-lang{ display:flex; border:1px solid var(--line); border-radius:99px; overflow:hidden; }
+  .ai-lang button{ background:none; border:none; color:var(--muted); font:600 11.5px 'Inter',sans-serif; padding:6px 10px; cursor:pointer; }
+  .ai-lang button[aria-pressed="true"]{ background:var(--blue); color:#fff; }
+  .ai-tabs{ display:flex; gap:7px; overflow-x:auto; padding-bottom:10px; scrollbar-width:none; flex-shrink:0; }
+  .ai-tabs::-webkit-scrollbar{ display:none; }
+  .ai-tab{ flex-shrink:0; background:var(--surface); color:var(--ice); border:1px solid var(--line); border-radius:99px; padding:7px 13px; font:500 12.5px 'Inter',sans-serif; cursor:pointer; }
+  .ai-tab[aria-selected="true"]{ background:var(--blue); border-color:var(--blue); color:#fff; }
+  .ai-body{ flex:1; overflow-y:auto; min-height:0; display:flex; flex-direction:column; gap:10px; padding:2px 0 8px; }
+  .ai-form{ display:flex; flex-direction:column; gap:9px; flex-shrink:0; padding-top:4px; }
+  .ai-form label{ font-size:12px; color:var(--muted); display:block; margin-bottom:4px; }
+  .ai-in{ width:100%; background:var(--surface); color:var(--ice); border:1px solid var(--line); border-radius:12px; padding:10px 12px; font:16px 'Inter',sans-serif; }
+  .ai-in:focus{ outline:2px solid var(--blue2); outline-offset:-1px; }
+  textarea.ai-in{ resize:none; min-height:74px; }
+  .ai-row{ display:flex; gap:8px; align-items:flex-end; }
+  .ai-row > div{ flex:1; }
+  .ai-go{ background:linear-gradient(135deg,var(--blue),#1d4ed8); color:#fff; border:none; border-radius:12px; padding:11px 18px; font:600 14px 'Inter',sans-serif; cursor:pointer; }
+  .ai-go:disabled{ opacity:.55; cursor:default; }
+  .ai-hints{ display:flex; flex-wrap:wrap; gap:7px; }
+  .ai-msg{ max-width:92%; padding:10px 12px; border-radius:14px; font-size:14px; line-height:1.55; white-space:pre-wrap; word-wrap:break-word; }
+  .ai-msg.bot{ align-self:flex-start; background:var(--surface); border:1px solid var(--line); }
+  .ai-msg.user{ align-self:flex-end; background:var(--blue); color:#fff; }
+  .ai-msg.wait{ opacity:.7; animation:aiPulse 1.2s ease-in-out infinite; }
+  @keyframes aiPulse{ 50%{ opacity:.35; } }
+  .ai-act{ display:flex; flex-wrap:wrap; gap:8px; }
 
   .read-progress{ position:fixed; top:0; left:0; right:0; height:3px; z-index:40; transform-origin:0 50%; transform:scaleX(0);
     background:linear-gradient(90deg,var(--blue),var(--blue2)); pointer-events:none; }
@@ -883,7 +927,7 @@
       Gabung grup WhatsApp kreator
     </a>
 
-    <a class="cta-secondary stagger" href="https://wa.me/6285823443082?text=Halo_admin_nandra_saya_ingin_daftar_kreator_bstation_mohon_bimbingannya%F0%9F%A4%97" target="_blank" rel="noopener">
+    <a class="cta-secondary stagger" href="https://wa.me/6285823443082?text=Halo%20admin%20nandra%2C%20saya%20ingin%20daftar%20kreator%20bstation%2C%20mohon%20bimbingannya%F0%9F%A4%97" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
       Chat langsung ke NandraMv
     </a>
@@ -953,6 +997,19 @@
   <div class="share-grid" id="shareGrid"></div>
   <p class="sheet-note">Instagram dan TikTok tidak punya tombol share dari web. Salin tautan, lalu tempel di story atau bio.</p>
   <button class="sheet-close" id="shareClose">Tutup</button>
+</div>
+<button class="ai-fab" id="aiFab" aria-label="Buka Asisten Pintar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.6L21 11l-6.6 2.4L12 20l-2.4-6.6L3 11l6.6-2.4z"/></svg>Tanya Asisten</button>
+<div class="sheet-backdrop" id="aiBackdrop"></div>
+<div class="sheet ai-sheet" id="aiSheet" role="dialog" aria-modal="true" aria-labelledby="aiTitle" aria-hidden="true">
+  <div class="sheet-handle"></div>
+  <div class="ai-head">
+    <h3 id="aiTitle">Asisten Pintar</h3>
+    <div class="ai-lang" role="group" aria-label="Bahasa jawaban"><button type="button" data-l="id" aria-pressed="true">ID</button><button type="button" data-l="en" aria-pressed="false">EN</button></div>
+    <button class="icon-btn" id="aiClose" aria-label="Tutup">&#10005;</button>
+  </div>
+  <div class="ai-tabs" id="aiTabs" role="tablist"></div>
+  <div class="ai-body"><div class="ai-form" id="aiForm"></div><div id="aiOut" style="display:flex;flex-direction:column;gap:10px"></div></div>
+  <p class="sheet-note" style="margin-top:8px">Jawaban disusun otomatis dari isi website ini (bukan AI generatif). Untuk hal penting, pastikan ke admin lewat WhatsApp.</p>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
@@ -1238,6 +1295,183 @@
     try{ localStorage.setItem('theme', light ? 'light' : 'dark'); }catch(e){}
     document.startViewTransition ? document.startViewTransition(() => applyTheme(light)) : applyTheme(light);
   });
+
+  /* ================= ASISTEN AI ================= */
+  (function(){
+    const $ = id => document.getElementById(id);
+    const sh = $('aiSheet'), bd = $('aiBackdrop'), fab = $('aiFab'), tabsEl = $('aiTabs'), form = $('aiForm'), out = $('aiOut');
+    const cats = [...document.querySelectorAll('#page-category .card h3')].map(h => h.textContent.split(' \u2014')[0].trim()).filter(Boolean);
+    const wa = ((document.querySelector('a[href^="https://wa.me/62"]') || {}).href || '').match(/wa\.me\/(\d+)/);
+    const waNum = wa ? wa[1] : '';
+    let lang = 'id', mode = 'chat', busy = false, hist = [];
+    const catF = {k:'cat', t:'select', l:'Kategori', opts:cats};
+    const MODES = {
+      chat:{tab:'Tanya', cta:'Kirim', fields:[{k:'q', t:'text', ph:'Tanya soal syarat, reward, cara daftar...', req:1}], hints:['Syarat daftar apa saja?','Apa saja kategorinya?','Bagaimana sistem reward?']},
+      cat:{tab:'Kategori', cta:'Rekomendasikan', fields:[{k:'skill', t:'area', l:'Hobi dan skill-mu', ph:'Contoh: suka menggambar dan mengedit video', req:1}]},
+      cek:{tab:'Cek syarat', cta:'Cek kesiapan', fields:[{k:'followers', t:'number', l:'Jumlah followers sosmed'},{k:'videos', t:'number', l:'Video yang sudah jadi'}, catF]},
+      idea:{tab:'Ide konten', cta:'Beri ide', fields:[catF,{k:'theme', t:'text', l:'Tema (opsional)', ph:'Contoh: anime petualangan'}]},
+      title:{tab:'Judul', cta:'Buat judul', fields:[{k:'about', t:'area', l:'Videomu tentang apa?', ph:'Ceritakan singkat isi videomu', req:1}, catF]},
+      msg:{tab:'Pesan admin', cta:'Buat pesan', fields:[{k:'name', t:'text', l:'Namamu'}, catF, {k:'followers', t:'number', l:'Followers'}, {k:'note', t:'area', l:'Catatan atau pertanyaan'}]}
+    };
+    const mk = (tag, cls, txt) => { const e = document.createElement(tag); if(cls) e.className = cls; if(txt != null) e.textContent = txt; return e; };
+
+    /* ---- mesin jawaban lokal: gratis, tanpa API, disusun dari isi website ---- */
+    const PAGE_NAME = {'page-home':'Beranda','page-category':'Kategori','page-reward':'Reward','page-join':'Daftar'};
+    const clip = (t, n) => t.length > n ? t.slice(0, n).replace(/\s+\S*$/, '') + '...' : t;
+    const norm = x => x.toLowerCase().replace(/[^a-z0-9\s]/g, ' ');
+    let chunks = null;
+    function getChunks(){
+      if(chunks) return chunks;
+      chunks = [...document.querySelectorAll('.page .card:not(.share-card)')].map(c => {
+        const lines = c.textContent.split('\n').map(l => l.replace(/\s+/g, ' ').trim()).filter(l => l && !/^(lihat )?contoh /i.test(l));
+        return {title:(lines[0] || ''), lines, text:lines.join('\n'), page:c.closest('.page').id};
+      }).filter(c => c.text.length > 15);
+      return chunks;
+    }
+    const SYN = {daftar:'registrasi gabung join mulai', syarat:'ketentuan persyaratan wajib minimal', reward:'hadiah komisi uang bayar gaji hasil juara menang', komisi:'reward uang bayar', gratis:'biaya bayar bimbingan', durasi:'menit lama panjang', follower:'followers pengikut', followers:'pengikut', resolusi:'720p 1080p kualitas', admin:'whatsapp grup bimbingan', event:'weekly mac bulanan mingguan kompetisi', video:'konten upload'};
+    const STOP = new Set('apa saja yang dan di ke dari untuk itu ini bisa bagaimana gimana berapa dong nih ya aku saya kamu dengan adalah atau jika kalau agar sih ada kak min'.split(' '));
+    const INTENTS = [[/syarat|persyaratan|ketentuan/, /minimal\s+\d+\s+followers/i], [/gratis|biaya|berbayar|bayar/, /gratis/i]];
+    const KW = {drawing:'gambar menggambar ilustrasi sketsa lukis art digital pensil', review:'review ulasan nonton film anime kritik opini bahas cerita', amv:'edit editing video musik lagu amv transisi capcut premiere', dubbing:'dubbing suara voice akting pengisi', cosplay:'cosplay kostum makeup rias foto', sing:'nyanyi menyanyi vokal cover bernyanyi lagu', dance:'menari tari dance joget koreografi', animation:'animasi animation motion 2d 3d blender frame'};
+    const IDEAS = {
+      drawing:[['Fan art karakter {t} dalam bentuk time-lapse','Time-lapse fan art of a {t} character'],['Gambar ulang adegan ikonik {t} dengan gayamu','Redraw an iconic {t} scene in your own style'],['Tantangan menggambar karakter {t} tanpa menghapus','Draw a {t} character with no erasing challenge']],
+      review:[['Review {t} tanpa spoiler: layak ditonton atau tidak?','Spoiler-free review of {t}: worth watching?'],['Lima hal yang bikin {t} menarik menurutmu','Five things you find great about {t}'],['Anime vs manga/novel dari {t}: mana lebih seru?','{t}: anime vs manga/novel']],
+      amv:[['AMV {t} dengan sinkronisasi beat lagu favorit','{t} AMV synced to the beat of your favorite song'],['AMV emosional tentang persahabatan atau perpisahan di {t}','Emotional {t} AMV about friendship or farewell'],['AMV aksi dengan transisi cepat dari {t}','Fast-transition action AMV from {t}']],
+      dubbing:[['Dubbing ulang adegan lucu {t} dengan suaramu','Re-dub a funny {t} scene with your own voice'],['Dubbing satu adegan dengan beberapa karakter {t}','Dub one {t} scene voicing several characters'],['Adegan {t} dengan dialog karanganmu sendiri','A {t} scene with your own made-up dialogue']],
+      cosplay:[['Cosplay karakter {t} lengkap dengan ekspresi khasnya','Cosplay a {t} character with their signature expressions'],['Proses pembuatan kostum {t} dari awal','Behind the scenes: making a {t} costume'],['Rekreasi adegan terkenal {t} dengan kostummu','Recreate a famous {t} scene in your costume']],
+      sing:[['Cover lagu tema {t} dengan gayamu','Cover the {t} theme song in your own style'],['Cover versi akustik lagu {t}','Acoustic cover of a {t} song'],['Cover lagu {t} dengan lirik terjemahan di layar','{t} cover with translated lyrics on screen']],
+      dance:[['Dance cover lagu tema {t}','Dance cover of the {t} theme'],['Koreografi buatanmu sendiri untuk lagu {t}','Your own choreography to a {t} song'],['Dance bersama teman bertema {t}','A group dance themed on {t}']],
+      animation:[['Animasi pendek 10 detik karakter {t} bergerak','A 10-second short animation of a {t} character'],['Animasi loop sederhana bertema {t}','A simple looping animation themed on {t}'],['Animasi reaksi lucu dengan karakter {t}','A funny reaction animation with a {t} character']]
+    };
+    const GENERIC = [['Serial 4 video bertema {t} supaya konsisten','A consistent 4-video series themed on {t}'],['Behind the scenes proses membuat video {t}','Behind-the-scenes of making your {t} video']];
+    const catKey = c => Object.keys(KW).find(k => c.toLowerCase().includes(k)) || '';
+    const catChunk = c => getChunks().find(k => k.page === 'page-category' && k.title.toLowerCase().includes(catKey(c)));
+    function rules(){
+      const all = getChunks().map(c => c.text).join('\n');
+      const syarat = getChunks().find(c => /syarat/i.test(c.text) && /followers/i.test(c.text));
+      return {
+        followers:+((all.match(/(\d+)\s*followers/i) || [])[1]) || 100,
+        videos:+((all.match(/membuat\s+(\d+)\s+video/i) || [])[1]) || 4,
+        reminders:syarat ? syarat.lines.filter(l => /resolusi|rasio|original/i.test(l) && l.length < 90).join('; ') : ''
+      };
+    }
+    function localAnswer(mode, lang, f){
+      const T = (a, b) => lang === 'en' ? b : a;
+      if(mode === 'chat'){
+        const q = norm(f.q);
+        if(/^\s*(hai|halo|hi|hello|assalam|pagi|siang|malam)\b/.test(q) && q.split(/\s+/).length < 4) return {text:T('Halo! Tanya soal syarat, kategori, reward, atau cara daftar ya.','Hi! Ask about requirements, categories, rewards, or how to register.')};
+        const toks = q.split(/\s+/).map(w => w.replace(/(nya|kah|lah)$/, '')).filter(w => w.length > 2 && !STOP.has(w));
+        if(toks.length === 1 && toks[0] === 'kategori') return {text:T('Kategori yang tersedia: ','Available categories: ') + cats.join(', ') + T('. Tanyakan salah satunya untuk detailnya.','. Ask about any of them for details.')};
+        const w = {}; toks.forEach(t => { w[t] = 1; (SYN[t] || '').split(' ').filter(Boolean).forEach(y => { if(!w[y]) w[y] = .5; }); });
+        const scored = getChunks().map(c => { let sc = 0; const ti = c.title.toLowerCase(), tx = c.text.toLowerCase();
+          Object.entries(w).forEach(([t, wt]) => { if(ti.includes(t)) sc += 3 * wt; else if(tx.includes(t)) sc += wt; }); return {c, sc}; }).sort((a, b) => b.sc - a.sc);
+        if((!scored.length || scored[0].sc < 2) && !INTENTS.some(it => it[0].test(q))) return {text:T('Aku belum menemukan jawabannya di website. Coba tanya langsung ke admin lewat WhatsApp.','I could not find that on the website. Please ask the admin on WhatsApp.'), wa:1};
+        const direct = INTENTS.filter(it => it[0].test(q)).map(it => getChunks().find(c => it[1].test(c.text))).filter(Boolean);
+        const pick = direct.length ? [{c:direct[0]}] : scored.filter((x, i) => i === 0 || (i === 1 && x.sc >= scored[0].sc * .6));
+        return {text:T('Dari informasi di website:','From the website (content is in Indonesian):') + '\n\n' + pick.map(x => clip(x.c.text, 520)).join('\n\n') + '\n\n' + T('Detail lengkap ada di halaman ','Full details are on the page ') + [...new Set(pick.map(x => PAGE_NAME[x.c.page]))].join(', ') + '.'};
+      }
+      if(mode === 'cat'){
+        const t = ' ' + norm(f.skill) + ' ';
+        const r = cats.map(c => { const hit = KW[catKey(c)].split(' ').filter(k => t.includes(k)); return {c, hit}; }).filter(x => x.hit.length).sort((a, b) => b.hit.length - a.hit.length).slice(0, 2);
+        if(!r.length) return {text:T('Belum ada kata kunci yang cocok. Coba tulis lebih spesifik, misalnya "suka menggambar" atau "bisa menyanyi". Kategori yang tersedia: ','No matching keywords yet. Try being more specific, e.g. "I like drawing" or "I can sing". Available categories: ') + cats.join(', ') + '.'};
+        const n = rules().videos;
+        return {text:T('Rekomendasi kategori untukmu:\n','Recommended categories for you:\n') + r.map((x, i) => { const ck = catChunk(x.c); return (i + 1) + '. ' + x.c + T(' (kamu menyebut: ',' (you mentioned: ') + x.hit[0] + ')' + (ck ? '\n   ' + clip(ck.lines.slice(1, 3).join(' '), 170) : ''); }).join('\n') + '\n\n' + T(`Langkah awal: buat ${n} video di kategori pilihanmu, lalu gabung grup WhatsApp admin untuk bimbingan.`, `First step: make ${n} videos in your chosen category, then join the admin's WhatsApp group for guidance.`)};
+      }
+      if(mode === 'cek'){
+        const R = rules(), fo = f.followers === '' ? null : +f.followers, vi = f.videos === '' ? null : +f.videos, L = [];
+        L.push(fo === null ? '? ' + T('Followers belum diisi','Followers not filled in') : fo >= R.followers ? '\u2705 ' + T(`Followers ${fo} (minimal ${R.followers})`, `Followers ${fo} (minimum ${R.followers})`) : '\u274C ' + T(`Followers ${fo}, kurang ${R.followers - fo} lagi dari minimal ${R.followers}`, `Followers ${fo}, ${R.followers - fo} short of the ${R.followers} minimum`));
+        L.push(vi === null ? '? ' + T('Jumlah video belum diisi','Video count not filled in') : vi >= R.videos ? '\u2705 ' + T(`Video ${vi} (minimal ${R.videos})`, `Videos ${vi} (minimum ${R.videos})`) : '\u274C ' + T(`Video ${vi}, kurang ${R.videos - vi} lagi dari minimal ${R.videos}`, `Videos ${vi}, ${R.videos - vi} short of the ${R.videos} minimum`));
+        L.push('\u2705 ' + T('Kategori: ','Category: ') + f.cat);
+        const ok = L.every(l => l[0] === '\u2705');
+        return {text:T('Hasil cek kesiapan:\n','Readiness check:\n') + L.join('\n') + (R.reminders ? '\n\n' + T('Pengingat: ','Reminder: ') + R.reminders + '.' : '') + '\n\n' + (ok ? T('Syarat dasar sudah terpenuhi. Hubungi admin untuk lanjut daftar.','The basic requirements are met. Contact the admin to continue.') : T('Lengkapi dulu bagian yang belum, lalu hubungi admin.','Complete the missing parts first, then contact the admin.'))};
+      }
+      if(mode === 'idea'){
+        const t = f.theme || T('anime favoritmu','your favorite anime'), k = catKey(f.cat), ck = catChunk(f.cat);
+        const list = (IDEAS[k] || []).concat(GENERIC).map(x => T(x[0], x[1]).replace(/\{t\}/g, t));
+        return {text:T(`Ide konten ${f.cat}:\n`, `Content ideas for ${f.cat}:\n`) + list.map((x, i) => (i + 1) + '. ' + x).join('\n') + (ck ? '\n\n' + T('Aturan kategori: ','Category rules: ') + clip(ck.lines.slice(1, 3).join(' '), 170) : '') + '\n' + T('Pastikan konten original, bukan reupload.','Make sure the content is original, not a re-upload.')};
+      }
+      if(mode === 'title'){
+        const a0 = f.about.replace(/\s+/g, ' ').slice(0, 80), a = a0.charAt(0).toUpperCase() + a0.slice(1), c = f.cat, tag = '#' + c.split(' ')[0].replace(/[^A-Za-z]/g, '');
+        return {text:T(`Pilihan judul:\n1. ${a} | ${c}\n2. Coba ${a}, hasilnya begini\n3. ${a} versi aku\n\nDeskripsi:\nDi video ini aku ${a}. Semoga kamu suka! Jangan lupa like, komen, dan share.\n\nHashtag:\n#Bstation #KreatorBstation ${tag} #Anime #Indonesia`, `Title options:\n1. ${a} | ${c}\n2. I tried ${a}, here is the result\n3. ${a}, my version\n\nDescription:\nIn this video I ${a}. Hope you enjoy it! Please like, comment, and share.\n\nHashtags:\n#Bstation #BstationCreator ${tag} #Anime #Indonesia`)};
+      }
+      if(mode === 'msg'){
+        const nm = f.name || T('calon kreator','a prospective creator'), fo = f.followers ? T(` Followers saya sekitar ${f.followers}.`, ` I have about ${f.followers} followers.`) : '', nt = f.note ? ' ' + f.note.replace(/\s+/g, ' ') : '';
+        return {text:T(`Halo admin Nandra, saya ${nm}. Saya ingin daftar kreator Bstation di kategori ${f.cat}.${fo}${nt} Mohon bimbingannya. Terima kasih \uD83D\uDE4F`, `Hello admin Nandra, I am ${nm}. I would like to register as a Bstation creator in the ${f.cat} category.${fo}${nt} I would appreciate your guidance. Thank you \uD83D\uDE4F`)};
+      }
+      return {text:''};
+    }
+    function renderTabs(){
+      tabsEl.innerHTML = '';
+      Object.entries(MODES).forEach(([id, M]) => {
+        const b = mk('button', 'ai-tab', M.tab); b.type = 'button'; b.setAttribute('role', 'tab');
+        b.setAttribute('aria-selected', id === mode);
+        b.addEventListener('click', () => { mode = id; renderTabs(); renderForm(); });
+        tabsEl.appendChild(b);
+      });
+    }
+    function renderForm(){
+      const M = MODES[mode]; form.innerHTML = ''; if(mode !== 'chat') out.innerHTML = '';
+      const row = mk('div', mode === 'chat' ? 'ai-row' : '');
+      M.fields.forEach(f => {
+        const box = mk('div'); if(f.l){ box.appendChild(mk('label', '', f.l)); }
+        let el;
+        if(f.t === 'area') el = mk('textarea', 'ai-in');
+        else if(f.t === 'select'){ el = mk('select', 'ai-in'); (f.opts || []).forEach(o => el.appendChild(mk('option', '', o))); }
+        else { el = mk('input', 'ai-in'); el.type = f.t === 'number' ? 'number' : 'text'; if(f.t === 'number') el.inputMode = 'numeric'; }
+        el.name = f.k; if(f.ph) el.placeholder = f.ph; if(f.t !== 'area' && f.t !== 'select') el.maxLength = 200; else if(f.t === 'area') el.maxLength = 500;
+        if(mode === 'chat') el.addEventListener('keydown', ev => { if(ev.key === 'Enter'){ ev.preventDefault(); send(); } });
+        box.appendChild(el); row.appendChild(box);
+      });
+      form.appendChild(row);
+      const go = mk('button', 'ai-go', M.cta); go.type = 'button'; go.id = 'aiGo'; go.addEventListener('click', send);
+      if(mode === 'chat'){ row.appendChild(go); }
+      else form.appendChild(go);
+      if(M.hints){
+        const hs = mk('div', 'ai-hints');
+        M.hints.forEach(h => { const c = mk('button', 'chip', h); c.type = 'button'; c.addEventListener('click', () => { form.querySelector('[name=q]').value = h; send(); }); hs.appendChild(c); });
+        form.appendChild(hs);
+      }
+      if(mode === 'chat' && !out.children.length) bubble('bot', 'Halo! Tanya apa saja soal pendaftaran kreator Bstation.');
+    }
+    function bubble(who, text, wait){
+      const b = mk('div', 'ai-msg ' + who + (wait ? ' wait' : ''), text); out.appendChild(b);
+      b.scrollIntoView({block:'nearest'}); return b;
+    }
+    function actions(text){
+      const a = mk('div', 'ai-act');
+      const cp = mk('button', 'chip', 'Salin'); cp.type = 'button';
+      cp.onclick = async () => { try{ await navigator.clipboard.writeText(text); toast('Teks disalin'); }catch(e){ toast('Gagal menyalin'); } };
+      a.appendChild(cp);
+      if(mode === 'msg' && waNum){
+        const w = mk('button', 'chip', 'Kirim ke WhatsApp admin'); w.type = 'button';
+        w.onclick = () => window.open('https://wa.me/' + waNum + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+        a.appendChild(w);
+      }
+      out.appendChild(a); a.scrollIntoView({block:'nearest'});
+    }
+    async function send(){
+      if(busy) return;
+      const M = MODES[mode], fields = {}; let ok = true;
+      M.fields.forEach(f => { const el = form.querySelector('[name="' + f.k + '"]'); fields[f.k] = el.value.trim(); if(f.req && !fields[f.k]) ok = false; });
+      if(!ok){ toast('Isi dulu kolom yang wajib'); return; }
+      busy = true; $('aiGo').disabled = true;
+      if(mode === 'chat'){ bubble('user', fields.q); form.querySelector('[name=q]').value = ''; } else out.innerHTML = '';
+      const wait = bubble('bot', 'Sedang menyusun jawaban...', true);
+      await new Promise(r => setTimeout(r, 350));
+      let res; try{ res = localAnswer(mode, lang, fields); }catch(e){ res = {text:'Maaf, ada kendala. Coba lagi atau tanya admin lewat WhatsApp.', wa:1}; }
+      wait.remove(); bubble('bot', res.text);
+      if(mode !== 'chat') actions(res.text);
+      else if(res.wa && waNum){ const w = mk('button', 'chip', 'Chat admin di WhatsApp'); w.type = 'button'; w.onclick = () => window.open('https://wa.me/' + waNum, '_blank', 'noopener'); out.appendChild(w); }
+      busy = false; const g = $('aiGo'); if(g) g.disabled = false;
+    }
+    function openAI(){ sh.classList.add('open'); bd.classList.add('open'); sh.setAttribute('aria-hidden', 'false'); }
+    function closeAI(){ sh.classList.remove('open'); bd.classList.remove('open'); sh.setAttribute('aria-hidden', 'true'); fab.focus(); }
+    fab.addEventListener('click', openAI); $('aiClose').addEventListener('click', closeAI); bd.addEventListener('click', closeAI);
+    document.addEventListener('keydown', ev => { if(ev.key === 'Escape' && sh.classList.contains('open')) closeAI(); });
+    document.querySelectorAll('.ai-lang button').forEach(b => b.addEventListener('click', () => {
+      lang = b.dataset.l; document.querySelectorAll('.ai-lang button').forEach(x => x.setAttribute('aria-pressed', x === b));
+    }));
+    renderTabs(); renderForm();
+  })();
 
   /* ================= INDIKATOR SCROLL ================= */
   const prog = document.getElementById('readProgress');
