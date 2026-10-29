@@ -553,6 +553,16 @@
   @keyframes aiPulse{ 50%{ opacity:.35; } }
   .ai-act{ display:flex; flex-wrap:wrap; gap:8px; }
 
+  /* ================= KOMUNITAS ================= */
+  .com-head{ display:flex; align-items:center; gap:12px; margin-bottom:14px; }
+  .com-head h3{ font-size:16px; margin:0 0 2px; }
+  .com-head p{ font-size:12.5px; color:var(--muted); margin:0; }
+  .com-logo{ width:48px; height:48px; border-radius:14px; object-fit:cover; flex-shrink:0; animation:comRing 2.4s ease-out infinite; }
+  @keyframes comRing{ 0%{ box-shadow:0 0 0 0 rgba(47,107,255,.5); } 100%{ box-shadow:0 0 0 12px rgba(47,107,255,0); } }
+  .com-list{ display:flex; flex-direction:column; gap:12px; margin-bottom:16px; }
+  .com-item b{ display:block; font-size:14px; margin-bottom:1px; }
+  .com-item span{ font-size:12.5px; color:var(--muted); }
+
   .read-progress{ position:fixed; top:0; left:0; right:0; height:3px; z-index:40; transform-origin:0 50%; transform:scaleX(0);
     background:linear-gradient(90deg,var(--blue),var(--blue2)); pointer-events:none; }
 </style>
@@ -922,11 +932,6 @@
       Daftar jadi kreator sekarang
     </a>
 
-    <a class="cta-secondary stagger" href="https://chat.whatsapp.com/Dxqa2p81BrOGp5aEvQB4cX" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-      Gabung grup WhatsApp kreator
-    </a>
-
     <a class="cta-secondary stagger" href="https://wa.me/6285823443082?text=Halo%20admin%20nandra%2C%20saya%20ingin%20daftar%20kreator%20bstation%2C%20mohon%20bimbingannya%F0%9F%A4%97" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
       Chat langsung ke NandraMv
@@ -938,6 +943,27 @@
     </a>
 
     <div class="divider"></div>
+
+    <div class="card community stagger">
+      <div class="com-head">
+        <img class="com-logo" data-logo alt="" width="48" height="48">
+        <div>
+          <h3>Kreator Bstation Ambassador</h3>
+          <p>Komunitas WhatsApp &middot; 4 grup</p>
+        </div>
+      </div>
+      <div class="com-list">
+      <div class="card-row com-item"><div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 7a7 7 0 0 1 0 10"/></svg></div><div><b>Pengumuman</b>
+          <span>Pengumuman resmi dari komunitas</span></div></div>
+      <div class="card-row com-item"><div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4L2 9l10 5 10-5-10-5z"/><path d="M6 11.5V16c0 1.2 2.7 3 6 3s6-1.8 6-3v-4.5"/></svg></div><div><b>Pengumuman Kelulusan Kreator</b>
+          <span>Info hasil kelulusan kreator</span></div></div>
+      <div class="card-row com-item"><div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg></div><div><b>Informasi event</b>
+          <span>Info event dan kompetisi</span></div></div>
+      <div class="card-row com-item"><div class="ico-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5a3.2 3.2 0 0 1 0 6M18 14.8c1.8.7 3 2.4 3 5.2"/></svg></div><div><b>Kreator Bstation BY Ambassador</b>
+          <span>Diskusi dan bimbingan bersama admin</span></div></div>
+      </div>
+      <a class="cta-primary" href="https://chat.whatsapp.com/Dxqa2p81BrOGp5aEvQB4cX" target="_blank" rel="noopener">Gabung komunitas di WhatsApp</a>
+    </div>
 
     <div class="card stagger">
       <div class="card-row">
@@ -1306,7 +1332,7 @@
     let lang = 'id', mode = 'chat', busy = false, hist = [];
     const catF = {k:'cat', t:'select', l:'Kategori', opts:cats};
     const MODES = {
-      chat:{tab:'Tanya', cta:'Kirim', fields:[{k:'q', t:'text', ph:'Tanya soal syarat, reward, cara daftar...', req:1}], hints:['Syarat daftar apa saja?','Apa saja kategorinya?','Bagaimana sistem reward?']},
+      chat:{tab:'Tanya', cta:'Kirim', fields:[{k:'q', t:'text', ph:'Tanya soal syarat, reward, cara daftar...', req:1}], hints:['Syarat daftar apa saja?','Apa saja kategorinya?','Bagaimana sistem reward?','Apa isi komunitasnya?']},
       cat:{tab:'Kategori', cta:'Rekomendasikan', fields:[{k:'skill', t:'area', l:'Hobi dan skill-mu', ph:'Contoh: suka menggambar dan mengedit video', req:1}]},
       cek:{tab:'Cek syarat', cta:'Cek kesiapan', fields:[{k:'followers', t:'number', l:'Jumlah followers sosmed'},{k:'videos', t:'number', l:'Video yang sudah jadi'}, catF]},
       idea:{tab:'Ide konten', cta:'Beri ide', fields:[catF,{k:'theme', t:'text', l:'Tema (opsional)', ph:'Contoh: anime petualangan'}]},
@@ -1328,9 +1354,9 @@
       }).filter(c => c.text.length > 15);
       return chunks;
     }
-    const SYN = {daftar:'registrasi gabung join mulai', syarat:'ketentuan persyaratan wajib minimal', reward:'hadiah komisi uang bayar gaji hasil juara menang', komisi:'reward uang bayar', gratis:'biaya bayar bimbingan', durasi:'menit lama panjang', follower:'followers pengikut', followers:'pengikut', resolusi:'720p 1080p kualitas', admin:'whatsapp grup bimbingan', event:'weekly mac bulanan mingguan kompetisi', video:'konten upload'};
-    const STOP = new Set('apa saja yang dan di ke dari untuk itu ini bisa bagaimana gimana berapa dong nih ya aku saya kamu dengan adalah atau jika kalau agar sih ada kak min'.split(' '));
-    const INTENTS = [[/syarat|persyaratan|ketentuan/, /minimal\s+\d+\s+followers/i], [/gratis|biaya|berbayar|bayar/, /gratis/i]];
+    const SYN = {daftar:'registrasi gabung join mulai', syarat:'ketentuan persyaratan wajib minimal', reward:'hadiah komisi uang bayar gaji hasil juara menang', komisi:'reward uang bayar', gratis:'biaya bayar bimbingan', durasi:'menit lama panjang', follower:'followers pengikut', followers:'pengikut', resolusi:'720p 1080p kualitas', admin:'whatsapp grup bimbingan', event:'weekly mac bulanan mingguan kompetisi', video:'konten upload', komunitas:'grup whatsapp community'};
+    const STOP = new Set('apa saja yang dan di ke dari untuk itu ini bisa bagaimana gimana berapa dong nih ya aku saya kamu dengan adalah atau jika kalau agar sih ada kak min isi'.split(' '));
+    const INTENTS = [[/syarat|persyaratan|ketentuan/, /minimal\s+\d+\s+followers/i], [/gratis|biaya|berbayar|bayar/, /gratis/i], [/komunitas|community|grup apa|isi grup/, /Komunitas WhatsApp/]];
     const KW = {drawing:'gambar menggambar ilustrasi sketsa lukis art digital pensil', review:'review ulasan nonton film anime kritik opini bahas cerita', amv:'edit editing video musik lagu amv transisi capcut premiere', dubbing:'dubbing suara voice akting pengisi', cosplay:'cosplay kostum makeup rias foto', sing:'nyanyi menyanyi vokal cover bernyanyi lagu', dance:'menari tari dance joget koreografi', animation:'animasi animation motion 2d 3d blender frame'};
     const IDEAS = {
       drawing:[['Fan art karakter {t} dalam bentuk time-lapse','Time-lapse fan art of a {t} character'],['Gambar ulang adegan ikonik {t} dengan gayamu','Redraw an iconic {t} scene in your own style'],['Tantangan menggambar karakter {t} tanpa menghapus','Draw a {t} character with no erasing challenge']],
@@ -1472,6 +1498,8 @@
     }));
     renderTabs(); renderForm();
   })();
+
+  document.querySelectorAll('[data-logo]').forEach(i => { const l = document.querySelector('.brand-mark img'); if(l) i.src = l.src; });
 
   /* ================= INDIKATOR SCROLL ================= */
   const prog = document.getElementById('readProgress');
